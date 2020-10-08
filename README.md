@@ -1,15 +1,15 @@
 # Astronomy-Study-Tool
 A tool used to create quizzes based on text files from my Astronomy class
 
-#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#//
-#//	File Name:         Astronomy Study Tool.exe
-#//	Description:       A study tool that will help you study Astronomy practice quiz's from Dr. Smith!
-#//	Author:            Roland Mahe, maher1@etsu.edu, Deptartment of Computing, East Tennessee State University
-#//	Created:           Sunday, September 27th, 2020
-#//	Copyright:         Roland Mahe, 2020
-#//
-#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	File Name:         Astronomy Study Tool.exe
+//	Description:       A study tool that will help you study Astronomy practice quiz's from Dr. Smith!
+//	Author:            Roland Mahe, maher1@etsu.edu, Deptartment of Computing, East Tennessee State University
+//	Created:           Sunday, September 27th, 2020
+//	Copyright:         Roland Mahe, 2020
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Welcome to the Astronomy Study Tool!
 
