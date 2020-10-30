@@ -24,6 +24,21 @@ namespace Astronomy_Tester
 
     class Program
     {
+        public static String original = "";//a string to hold the original untranslated string
+        public static List<String> questions = null;//a string to hold the original untranslated tokenized string
+        public static String strDelims = "0123456789";//delimiters to watch out for
+        public static List<int> questionNums = null; // a string to hold the number of each question selected
+        public static string userInput;
+        public static int userInputNum = 10;//default length of 10
+        public static char userInputChar = 'a';
+        public static bool restart = true;
+        public static int counter = 1;
+        public static List<char> userAnswers = new List<char> { };// a list that will store the user's inputed answers
+        public static List<char> correctAnswers = new List<char> { };// a list that will store the correct answers relevant to the user
+        public static List<char> answers = null; //stores all the correct answers
+        public static double grade = -1;
+        public static bool exit = false;
+
         /// <summary>Defines the entry point of the application.</summary>
         /// <param name="args">The arguments.</param>
         [STAThread]
@@ -36,19 +51,6 @@ namespace Astronomy_Tester
             #endregion
 
             #region Variable setup
-            String original = "";//a string to hold the original untranslated string
-            List<String> questions = null;//a string to hold the original untranslated tokenized string
-            String strDelims = "0123456789";//delimiters to watch out for
-            List<int> questionNums = null; // a string to hold the question num's given
-            string userInput;
-            int quizLength = 10;//default length of 10
-            bool restart = true;
-            int counter = 1;
-            List<char> userAnswers = new List<char> { };// a list that will store the user's inputed answers
-            List<char> correctAnswers = new List<char> { };// a list that will store the correct answers relevant to the user
-            List<char> answers = null; //stores all the correct answers
-            double grade = -1;
-
             UtilityNamespace.Menu menu = new UtilityNamespace.Menu("Welcome to the Astomony Study Tool!");
             menu = menu + "Open a file" + "Start a new quiz" + "Review last quiz (Under Construction)" + "Average Grade (Under Construction)" + "Quit";
 
@@ -89,9 +91,9 @@ namespace Astronomy_Tester
 
                                 if (userInput.All(char.IsDigit))//if all characters in userInput are digits
                                 {
-                                    quizLength = Convert.ToInt32(userInput);
+                                    userInputNum = Convert.ToInt32(userInput);
                                     restart = false;
-                                    questionNums = selectQuestions(questions.Count, quizLength);
+                                    questionNums = selectQuestions(questions.Count, userInputNum);
                                 }
                                 else
                                 {
@@ -142,10 +144,10 @@ namespace Astronomy_Tester
                                 counter++;
                             } // presents all the questions and gathers all the users answers
 
-                            foreach(int number in questionNums)
+                            foreach (int number in questionNums)
                             {
                                 correctAnswers.Add(answers[number]);
-                            }
+                            }// grabs the correct quesitons for all the questions selected
 
                             Console.Clear();
                             Console.WriteLine($"Total Questions: {questions.Count}\n" +
@@ -154,82 +156,105 @@ namespace Astronomy_Tester
                                               $"Correct Answers: {correctAnswers.Count}");
                             Console.ReadLine();
 
-                            #region Display Grade
-
-                            Console.Clear();
-                            grade = Tools.GetGrade(correctAnswers, userAnswers);
-
-                            Console.Write($"You scored a ");
-                            if(grade > 84)
+                            do
                             {
-                                Console.ForegroundColor = ConsoleColor.Green;
-                            }
-                            else if(grade > 70)
-                            {
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                            }
-                            else
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                            }
+                                exit = false;
+                                #region Display Grade
 
-                            Console.Write($"{Math.Round(grade, 2)}%");
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine("!");
+                                Console.Clear();
+                                grade = Tools.GetGrade(correctAnswers, userAnswers);
 
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.WriteLine("\t\t╔═══════════════════════╦═══════════════════════╦═══════════════════════╗");
-                            Console.Write("\t\t║\t");
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write("Question");
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.Write("\t║\t");
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write("Correct Answer");
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.Write("\t║\t");
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write("Given Answer");
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.WriteLine("\t║");
-                            // 1 "╔═══════════════════════╦═══════════════════════╦═══════════════════════╗"
-                            // 2 "║       Question        ║       Correct Answer  ║       Given Answer    ║"
-                            // 3 "╠═══════════════════════╬═══════════════════════╬═══════════════════════╣"
-                            // 4 "║       Question        ║       Correct Answer  ║       Given Answer    ║"
-                            // 5 "╚═══════════════════════╩═══════════════════════╩═══════════════════════╝"
-
-                            for (int i = 0; i < correctAnswers.Count; i++) //prints the "in betweeen sections of the table... i.e. rows 2 - 4 on the table above.
-                            {
-                                Console.WriteLine("\t\t╠═══════════════════════╬═══════════════════════╬═══════════════════════╣");
-                                Console.Write("\t\t║\t");
-                                Console.ForegroundColor = ConsoleColor.White;
-                                Console.Write($"({i + 1}){questionNums[i] + 1}");
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.Write("\t\t║\t");
-                                Console.ForegroundColor = ConsoleColor.White;
-                                Console.Write(correctAnswers[i]);
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.Write("\t\t║\t");
-                                
-                                if(correctAnswers[i] == userAnswers[i])
+                                Console.Write($"You scored a ");
+                                if (grade > 84)
                                 {
                                     Console.ForegroundColor = ConsoleColor.Green;
+                                }
+                                else if (grade > 70)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
                                 }
                                 else
                                 {
                                     Console.ForegroundColor = ConsoleColor.Red;
                                 }
 
-                                Console.Write(userAnswers[i]);
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine("\t\t║");
+                                Console.Write($"{Math.Round(grade, 2)}%");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine("!");
 
-                            }
-                            Console.WriteLine("\t\t╚═══════════════════════╩═══════════════════════╩═══════════════════════╝");
-                            #endregion
+                                GetGradeTable();
+                                #endregion
 
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine("\nUnder construction: Viewing individual questions with the correct answer and your given answer");
+                                Console.ForegroundColor = ConsoleColor.White;
+
+                                #region Question review
+                                do
+                                {
+                                    restart = true;//in the case that more than one quiz is taken, restart is set back to true here to make sure we get a digit input
+                                    Console.Write("\nWould you like to review a question? Y or N:");
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    userInput = Console.ReadLine();
+                                    Console.ForegroundColor = ConsoleColor.White;
+
+                                    if (userInput.Length == 1)// if userInput is only equal to one character
+                                    {
+                                        userInputChar = Convert.ToChar(userInput.ToLower());
+                                        restart = false;
+                                    }
+                                    else
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("\aPlease input only one character...");
+                                        Console.ReadLine();
+                                    }
+                                } while (restart); // gets y or n from user
+
+
+                                if (userInputChar == 'y')
+                                {
+                                    do
+                                    {
+                                        restart = true;//in the case that more than one quiz is taken, restart is set back to true here to make sure we get a digit input
+                                        Console.Clear();
+                                        GetGradeTable();
+                                        Console.Write($"Please enter a number between 1 and {questionNums.Count}: ");
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        userInput = Console.ReadLine();
+                                        Console.ForegroundColor = ConsoleColor.White;
+
+                                        if (userInput.All(char.IsDigit))//if all characters in userInput are digits
+                                        {
+                                            userInputNum = Convert.ToInt32(userInput);
+                                        }
+                                        else
+                                        {
+                                            Console.Clear();
+                                            Console.WriteLine("\aPlease only input numbers...");
+                                            Console.ReadLine();
+                                        }
+                                        if (userInputNum <= questionNums.Count && userInputNum > 0)
+                                        {
+                                            restart = false;
+                                        }
+                                        else
+                                        {
+                                            Console.Clear();
+                                            Console.WriteLine($"\aPlease enter a number between 1 and {questionNums.Count}...");
+                                            Console.ReadLine();
+                                        }
+                                    } while (restart); //  makes sure they input only digits between 1 and quesitonNums.Count
+
+                                    Console.Clear();
+                                    Console.WriteLine(questions[questionNums[userInputNum - 1]]);
+                                    Console.WriteLine($"\nYour answer was: {userAnswers[userInputNum - 1]}. The correct answer is: {correctAnswers[userInputNum - 1]}");
+                                    Console.ReadLine();
+                                }
+                                else
+                                {
+                                    exit = true;
+                                }
+                                #endregion
+                            } while (!exit);
                             counter = 0;
                             userAnswers = new List<char> { };
                             correctAnswers = new List<char> { };
@@ -292,8 +317,64 @@ namespace Astronomy_Tester
 
             return questionNums;//returning list of question numbers
         }
+
+        /// <summary>Gets the grade table.</summary>
+        public static void GetGradeTable()
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("\t\t╔═══════════════════════╦═══════════════════════╦═══════════════════════╗");
+            Console.Write("\t\t║\t");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Question");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("\t║\t");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Correct Answer");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("\t║\t");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Given Answer");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("\t║");
+            // 1 "╔═══════════════════════╦═══════════════════════╦═══════════════════════╗"
+            // 2 "║       Question        ║       Correct Answer  ║       Given Answer    ║"
+            // 3 "╠═══════════════════════╬═══════════════════════╬═══════════════════════╣"
+            // 4 "║       Question        ║       Correct Answer  ║       Given Answer    ║"
+            // 5 "╚═══════════════════════╩═══════════════════════╩═══════════════════════╝"
+
+            for (int i = 0; i < correctAnswers.Count; i++) //prints the "in betweeen sections of the table... i.e. rows 2 - 4 on the table above.
+            {
+                Console.WriteLine("\t\t╠═══════════════════════╬═══════════════════════╬═══════════════════════╣");
+                Console.Write("\t\t║\t");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write($"({i + 1}) {questionNums[i] + 1}");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write("\t\t║\t");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(correctAnswers[i]);
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write("\t\t║\t");
+
+                if (correctAnswers[i] == userAnswers[i])
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+
+                Console.Write(userAnswers[i]);
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("\t\t║");
+
+            }
+            Console.WriteLine("\t\t╚═══════════════════════╩═══════════════════════╩═══════════════════════╝");
+        }
+
     }//end of class
 
+    
 
 }//end of namespace
 

@@ -135,5 +135,12 @@ namespace Astronomy_Tester
 
             return grade;
         }
+
+        public static bool IsChar(string userInput)
+        {
+            
+
+            return true;
+        }
     }
 }
